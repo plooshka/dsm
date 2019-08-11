@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирвоание пользователя</title>
+</head>
+<body>
+<h1>Настройки пользователя </h1>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+<form action="#" th:action="@{/create}" th:object="${user}" method="post">
+    <table>
+        <tr>
+            <td>Логин пользователя :</td>
+            <td><input type="text" th:field="*{username}" /></td>
+            <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}" bgcolor="red">Text Error</td>
+            <br/>
+            <td>Его роли :</td>
+            <div>
+
+                <td>
+                    <!--<label><input type="checkbox" th:each="r : ${roles}" th:text="${r}" ${user.roles?seq_contains(role)?string("checked", "")} /></label>-->
+                    <!--<label th:for="${#ids.next('checked')}" th:text="#{user.roles}">Covered</label>
+                    <input type="checkbox" th:field="*{checked}" />-->
+                    <ul>
+                        <li th:each="r : ${roles}">
+                            <input type="checkbox" th:field="*{roles}" th:value="${r}"  />
+                            <label th:for="${#ids.prev('roles')}"
+                                   th:text="${r}">Heating</label>
+                        </li>
+                    </ul>
+                </td>
+            </div>
+
+        </tr>
+        <tr>
+            <td><button type="submit">Применить</button></td>
+        </tr>
+    </table>
+</form>
+<a href="/documents" type="button">Назад</a>
+<br/>
+</body>
+</html>

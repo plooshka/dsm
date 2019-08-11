@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать!</title>
+</head>
+<body>
+<h1>Привет, пользователь!</h1>
+<div>Список документов</div>
+<a href="/user">Список пользователей</a>
+
+<table>
+    <thead>
+    <tr>
+        <th> Документ </th>
+        <th> Автор </th>
+        <th> Время загрузки </th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${documents.empty}">
+        <td colspan="2"> Не добавлено ни одного документа </td>
+    </tr>
+    <tr bgcolor="aqua" th:each="doc : ${documents}">
+        <td><span th:text="${doc.text}"> Документ </span></td>
+        <td><span th:text="${doc.author.username}"> Автор </span></td>
+        <td><span th:text="${doc.createdAt}"> Время загрузки </span></td>
+
+    </tr>
+    </tbody>
+</table>
+
+
+<a href="/create">Добавить документ</a>
+
+</form>
+<div>
+    <form th:action="@{/logout}" method="post">
+    <input type="submit" value="Выйти"/>
+    </form>
+</div>
+</body>
+</html>

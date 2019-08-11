@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать!</title>
+</head>
+<body>
+<h1>Привет, пользователь!</h1>
+<div>Список пользователей</div>
+<table>
+    <thead>
+    <tr>
+        <th> Имя пользователя </th>
+        <th> Его роли </th>
+        <th></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${users.empty}">
+        <td colspan="2"> Нету пользователей </td>
+    </tr>
+    <tr bgcolor="aqua" th:each="usr : ${users}">
+        <td><span th:text="${usr.username}"> Имя пользователя </span></td>
+        <td><span th:each="r : ${usr.roles}" th:text="${r}"> Роли </span></td>
+        <td><a th:href="@{/user/{id}(id=${usr.username})}"> редактировать </a></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</form>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+</body>
+</html>

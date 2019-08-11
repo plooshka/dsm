@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка</title>
+</head>
+<body>
+<h1>Добавить документ: </h1>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+<form action="#" th:action="@{/create}" th:object="${document}" method="post">
+    <table>
+        <tr>
+            <td>Название документа:</td>
+            <td><input type="text" th:field="*{text}" /></td>
+            <td th:if="${#fields.hasErrors('text')}" th:errors="*{text}" bgcolor="red">Text Error</td>
+        </tr>
+        <tr>
+            <td><button type="submit">Добавить</button></td>
+        </tr>
+    </table>
+</form>
+<a href="/documents" type="button">Назад</a>
+<br/>
+</body>
+</html>
