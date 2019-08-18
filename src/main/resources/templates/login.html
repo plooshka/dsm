@@ -2,20 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Login page </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Вход</title>
 </head>
 <body>
 <div>Авторизация</div>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div th:if="${param.error}" class="alert alert-danger" role="alert">
+    <span>Неверный логин или пароль</span>
 </div>
 <div th:if="${param.logout}">
-    You have been logged out.
+    Вы вышли из системы
 </div>
 <form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
+    <div>
+        <label> Логин : <input type="text" name="username"/> </label>
+        <small id="passwordHelpInline" class="text-muted"> Логин должен быть не менее 4 символов </small>
+    </div>
+    <div><label> Пароль : <input type="password" name="password"/> </label></div>
+    <div><input type="submit" class="btn btn-primary" value="Sign In"/></div>
 </form>
 <a href="/registration">Регистрация</a>
 </body>

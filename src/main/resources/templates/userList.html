@@ -22,7 +22,7 @@
     </tr>
     <tr bgcolor="aqua" th:each="usr : ${users}">
         <td><span th:text="${usr.username}"> Имя пользователя </span></td>
-        <td><span th:each="r : ${usr.roles}" th:text="${r}"> Роли </span></td>
+        <td><span th:each="r : ${usr.roles}" th:text=" ${r} + ' '"> Роли </span></td>
         <td><a th:href="@{/user/{id}(id=${usr.username})}"> редактировать </a></td>
     </tr>
     </tbody>

@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -14,8 +16,14 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotEmpty
+    @Size(min = 4)
     private String username;
+
+    @NotEmpty
     private String password;
+
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

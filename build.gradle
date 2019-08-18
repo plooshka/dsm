@@ -21,5 +21,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//testImplementation 'org.springframework.security:spring-security-test'
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE'
     compile("org.hibernate.validator:hibernate-validator")
 }

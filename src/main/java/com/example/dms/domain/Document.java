@@ -1,8 +1,10 @@
 package com.example.dms.domain;
 
-import org.hibernate.annotations.ManyToAny;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -12,18 +14,19 @@ public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    private Long id;
 
-    @NotNull
-    @Size(min = 5, max = 20)
+    @NotBlank(message = "Не может быть пустым")
+    @Length(min = 5, max = 50, message = "Не может быть менее 5 или более 50 символов")
     private String text;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
-
     private Date createdAt;
+
+    private String filename;
 
     public Document(){
     }
@@ -32,10 +35,6 @@ public class Document {
         this.author = author;
         this.text = text;
         this.createdAt = new Date();
-    }
-
-    public String getAuthorName(){
-        return author != null ? author.getUsername() : "нету автора";
     }
 
 
@@ -48,11 +47,11 @@ public class Document {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getText() {
@@ -69,5 +68,13 @@ public class Document {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

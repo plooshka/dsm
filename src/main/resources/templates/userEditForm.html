@@ -7,11 +7,12 @@
 <body>
 <h1>Настройки пользователя </h1>
 <div>
-    <form th:action="@{/logout}" method="post">
+   <!-- <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
-    </form>
+    </form>-->
 </div>
-<form action="#" th:action="@{/create}" th:object="${user}" method="post">
+<form name="fwr" action="#" th:action="@{/user}" th:object="${user}" method="post">
+    <input type="hidden" th:value="${user.id}" name="userId" />
     <table>
         <tr>
             <td>Логин пользователя :</td>
@@ -22,15 +23,13 @@
             <div>
 
                 <td>
-                    <!--<label><input type="checkbox" th:each="r : ${roles}" th:text="${r}" ${user.roles?seq_contains(role)?string("checked", "")} /></label>-->
-                    <!--<label th:for="${#ids.next('checked')}" th:text="#{user.roles}">Covered</label>
-                    <input type="checkbox" th:field="*{checked}" />-->
                     <ul>
-                        <li th:each="r : ${roles}">
+                        <li name="roles" th:each="r : ${roles}">
                             <input type="checkbox" th:field="*{roles}" th:value="${r}"  />
                             <label th:for="${#ids.prev('roles')}"
-                                   th:text="${r}">Heating</label>
+                                   th:text="${r}"></label>
                         </li>
+                        <li th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}" bgcolor="red">Text error</li>
                     </ul>
                 </td>
             </div>

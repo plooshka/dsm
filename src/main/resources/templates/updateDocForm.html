@@ -2,25 +2,26 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Загрузка</title>
+    <title>Редактирование документа</title>
 </head>
 <body>
-<h1>Добавить документ: </h1>
+<h1>Изменить документ: </h1>
 <div>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
     </form>
 </div>
-<form action="#" th:action="@{/create}" th:object="${document}" enctype="multipart/form-data" method="post">
+<form action="#" th:action="@{/documents}" th:object="${document}" enctype="multipart/form-data" method="post">
+    <input type="hidden" th:value="${document.Id}" name="docId" />
     <table>
         <tr>
-            <td>Название документа:</td>
-            <td><input type="text" th:field="*{text}" /></td>
+            <td>Изменить название документа:</td>
+            <td><input type="text" th:field="*{text}" name="text" /></td>
             <td th:if="${#fields.hasErrors('text')}" th:errors="*{text}" bgcolor="red">Text Error</td>
             <td><input type="file" name="file"/></td>
         </tr>
         <tr>
-            <td><button type="submit">Добавить</button></td>
+            <td><button type="submit">Сохранить</button></td>
         </tr>
     </table>
 </form>
