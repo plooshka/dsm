@@ -2,6 +2,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="webjars/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Добро пожаловать!</title>
 </head>
 <body>
@@ -10,7 +13,7 @@
 
 <div th:if="${isAdmin}"> <a th:href="@{/user}">Список пользователей</a></div>
 
-<table>
+<table border="1">
     <thead>
     <tr>
         <th> Документ </th>
@@ -22,21 +25,58 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${documents.empty}">
+    <tr th:if="${page.empty}">
         <td colspan="2"> Не добавлено ни одного документа </td>
     </tr>
-    <tr bgcolor="aqua" th:each="doc : ${documents}">
+    <tr bgcolor="aqua" th:each="doc, iStat : ${page.content}">
         <td><span th:text="${doc.text}"> Документ </span></td>
         <td><span th:text="${doc.author.username}"> Автор </span></td>
         <td><span th:text="${doc.createdAt}"> Время загрузки </span></td>
-
         <td><a th:href="@{/docs/{docName}(docName=${doc.filename})}" th:text="${doc.filename}" >  </a></td>
         <td><a th:href="@{/documents/{id}(id=${doc.id})}"> редактировать документ</a></td>
-
     </tr>
     </tbody>
 </table>
 
+<!--<div th:if="${page.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/documents(size=${page.size}, page=${pageNumber})}"
+       th:text=${pageNumber}
+       th:class="${pageNumber==page.number + 1} ? active"></a>
+</div>-->
+<nav aria-label="Pagination" th:if="${page.totalPages gt 0}">
+    <ul class="pagination mt-2 ml-2 font-weight-bold">
+       <!-- <li class="page-item" th:classappend="${page.number eq 0} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/documents?page={id}(id=${page.number lt 2 ? 1 : page.number})}"
+               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>-->
+        <li class="page-item " th:classappend="${i eq page.number } ? 'active'"
+            th:each="i : ${#numbers.sequence( 0 , page.totalPages - 1)}">
+            <a class="page-link" th:href="@{/documents?page={id}(id=${i})}" th:text="${i} + 1"
+                data-toggle="tooltip"></a>
+        </li>
+       <!-- <li class="page-item" th:classappend="${page.number + 1 eq page.totalPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/documents?page={id}(id=${page.number + 2})}"
+               aria-label="Next" title="Next Page" data-toggle="tooltip">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>-->
+    </ul>
+</nav>
+
+<!--<hr/>
+<ul class="nav nav-pills">
+    <li class="nav-item"
+        th:each="i : ${#numbers.sequence(0, page.totalPages-1)}">
+        <a th:href="@{/documents/(page=${i})}" th:text="${i} + 1" class="nav-link"
+        th:classappend="${curPage}==${i} ? 'active' : ' ' " data-toggle="tooltip"></a>
+    </li>
+
+</ul>-->
 
 <a href="/create">Добавить документ</a>
 

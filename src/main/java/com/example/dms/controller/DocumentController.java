@@ -7,18 +7,26 @@ import com.example.dms.repos.DocumentRepo;
 import com.example.dms.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class DocumentController {
@@ -38,9 +46,15 @@ public class DocumentController {
     }
 
     @GetMapping("/documents")
-    public String showAllDocs(Model model,
-                              @AuthenticationPrincipal User user
+    public String showAllDocs(
+            Integer curPage,
+            @PageableDefault(size = 5,sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
+            Model model,
+            @AuthenticationPrincipal User user
     ) {
+
+        Page<Document> page = null;
+        curPage = 0;
 
         Set<Role> rolesUser = user.getRoles();
         Iterable<Long> UID = Collections.singleton(user.getId());
@@ -48,13 +62,25 @@ public class DocumentController {
         model.addAttribute("user", user);
 
         if (!rolesUser.contains(Role.ADMIN)) {
-            model.addAttribute("documents", documentRepo.findAllByAuthor(user));
+            page = documentRepo.findAllByAuthor( user, pageable);
         }
         if (rolesUser.contains(Role.ADMIN)) {
-            model.addAttribute("documents", documentRepo.findAll());
+            page = documentRepo.findAll(pageable);
             model.addAttribute("isAdmin", true);
         }
         if (rolesUser.isEmpty()) return "kick";
+
+        int totalPages = page.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("page", page);
+        model.addAttribute("currentPage", curPage );
+
         return "home";
     }
 
@@ -102,14 +128,16 @@ public class DocumentController {
             @RequestParam(name = "docId") Long id,
             Model model
     ) throws IOException {
-        if (bindingResult.hasErrors()) {
-            return "updateDocForm";
-        }
+
         document = documentRepo.findDocumentById(id);
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", "Неверное имя документа");
+            model.addAttribute("document", document);
+            return "updateDocForm";
+        }
+
         document.setText(text); //тут ошибка
-
-
 
         if (!file.isEmpty()) {
             addFile(document, file);

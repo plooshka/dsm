@@ -26,9 +26,15 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@Valid User user,
+                          BindingResult bindingResult,
                           Model model
-                         // BindingResult bindingResult
     ) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("error", "Неверно заполнена форма");
+            return "registration";
+        }
+
+
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
         if(userFromDb != null) {

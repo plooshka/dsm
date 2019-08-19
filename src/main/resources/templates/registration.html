@@ -12,6 +12,9 @@
 <div th:if="${message}" class="alert alert-danger" role="alert">
     <b>Такой пользователь уже существует</b>
 </div>
+<div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
+    <b></b>
+</div>
 <div th:if="${param.logout}">
     Вы вышли из системы
 </div>
