@@ -5,6 +5,7 @@ import com.example.dms.domain.Role;
 import com.example.dms.domain.User;
 import com.example.dms.repos.DocumentRepo;
 import com.example.dms.repos.UserRepo;
+import com.example.dms.service.FinishComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -18,13 +19,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.Doc;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -62,12 +61,15 @@ public class DocumentController {
         model.addAttribute("user", user);
 
         if (!rolesUser.contains(Role.ADMIN)) {
-            page = documentRepo.findAllByAuthor( user, pageable);
+            //page = documentRepo.findAllByAuthor( user, pageable);
+            page = documentRepo.findAll(pageable);
+            model.addAttribute("isUser", true);
         }
         if (rolesUser.contains(Role.ADMIN)) {
             page = documentRepo.findAll(pageable);
             model.addAttribute("isAdmin", true);
         }
+
         if (rolesUser.isEmpty()) return "kick";
 
         int totalPages = page.getTotalPages();
@@ -87,23 +89,32 @@ public class DocumentController {
     @GetMapping("/create")
     public String addDocForm(
             @ModelAttribute Document document,
-            Model model
+            Model model,
+            @AuthenticationPrincipal User user
     ) {
+        Set<Role> rolesUser = user.getRoles();
+        if (!rolesUser.contains(Role.ADMIN)) {
+            //page = documentRepo.findAllByAuthor( user, pageable);
+            model.addAttribute("isUser", true);
+        }
+        if (rolesUser.contains(Role.ADMIN)) {
+            model.addAttribute("isAdmin", true);
+        }
         return "createDocForm";
     }
 
     @PostMapping("/create")
     public String addDoc(@Valid Document document,
                          BindingResult bindingResult,
-                         @RequestParam MultipartFile file,
                          @RequestParam String text,
+                         @RequestParam String VUZ,
+                         @RequestParam(required = false) Double finish,
                          @AuthenticationPrincipal User user
     ) throws IOException {
         if (bindingResult.hasErrors()) {
             return  "createDocForm";
         }
-        document = new Document(text, user);
-        addFile(document, file);
+        document = new Document(text, user, VUZ, finish);
         documentRepo.save(document);
         return "redirect:/documents";
     }
@@ -123,8 +134,9 @@ public class DocumentController {
     public String updateDocument(
             @Valid Document document,
             BindingResult bindingResult,
-            @RequestParam MultipartFile file,
             @RequestParam("text") String text,
+            @RequestParam("VUZ") String VUZ,
+            @RequestParam("finish") Double finish,
             @RequestParam(name = "docId") Long id,
             Model model
     ) throws IOException {
@@ -136,11 +148,14 @@ public class DocumentController {
             model.addAttribute("document", document);
             return "updateDocForm";
         }
-
-        document.setText(text); //тут ошибка
-
-        if (!file.isEmpty()) {
-            addFile(document, file);
+        if (!text.isEmpty()) {
+            document.setText(text);
+        }
+        if (!VUZ.isEmpty()) {
+            document.setVUZ(VUZ);
+        }
+        if (finish != null) {
+            document.setFinish(finish);
         }
 
         documentRepo.save(document);
@@ -149,23 +164,17 @@ public class DocumentController {
         return "redirect:/documents";
     }
 
-    private void addFile(@RequestParam Document document, @RequestParam MultipartFile file) throws IOException {
+    @GetMapping("/sortAllDocs")
+    private String compareResults(
+            @AuthenticationPrincipal User user,
+            Model model
+    ) {
 
-        if (!file.isEmpty()) {
-
-            File uploadDir = new File(uploadPath);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
-
-            document.setFilename(resultFileName);
-        } else document.setFilename("");
+        ArrayList<Document> docs = documentRepo.findAll();
+        FinishComparator fcomp = new FinishComparator();
+        Collections.sort(docs, fcomp);
+        model.addAttribute("docs", docs);
+        model.addAttribute("user", user);
+        return "result";
     }
-
 }

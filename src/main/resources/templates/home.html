@@ -6,12 +6,21 @@
     <script type="text/javascript" src="webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Добро пожаловать!</title>
+    <style>
+        .center {
+            width: 200px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            background: #fc0; /* Цвет фона */
+        }
+    </style>
 </head>
-<body>
+<body class="center mt-5" >
 <h1>Привет, <span th:text="${user.username}"></span></h1>
-<div><b>Список документов</b></div>
+<div><b>Список результатов забега</b></div>
 
-<div th:if="${isAdmin}"> <a th:href="@{/user}">Список результатов</a></div>
+<div th:if="${isAdmin}"> <a th:href="@{/user}">Список пользователей</a></div>
+<div th:if="${isAdmin}"> <a th:href="@{/sortAllDocs}">Определить победителей</a></div>
 
 <table border="1">
     <thead>
@@ -19,21 +28,23 @@
         <th> Фамилия</th>
         <th> Пользователь </th>
         <th> ВУЗ </th>
-        <th> Результат </th>
-        <th></th>
+        <th> Результат(сек) </th>
+        <th><div th:if="${isAdmin}">Внесите(измените) результат</div>
+            <div th:if="${isUser}">Вы не можете вносить информацию</div>
+        </th>
 
     </tr>
     </thead>
     <tbody>
     <tr th:if="${page.empty}">
-        <td colspan="2"> Не добавлено ни одного документа </td>
+        <td colspan="2"> Не добавлено ни одной записи</td>
     </tr>
     <tr bgcolor="aqua" th:each="doc, iStat : ${page.content}">
         <td><span th:text="${doc.text}"> Документ </span></td>
         <td><span th:text="${doc.author.username}"> Автор </span></td>
-        <td><span th:text="${doc.createdAt}"> Время загрузки </span></td>
-        <td><a th:href="@{/docs/{docName}(docName=${doc.filename})}" th:text="${doc.filename}" >  </a></td>
-        <td><a th:href="@{/documents/{id}(id=${doc.id})}"> редактировать результат</a></td>
+        <td><span th:text="${doc.VUZ}"> ВУЗ </span></td>
+        <td><span th:text="${doc.finish}"> Результат(сек) </span></td>
+        <td><div th:if="${isAdmin}"><a th:href="@{/documents/{id}(id=${doc.id})}"> редактировать результат</a></div></td>
     </tr>
     </tbody>
 </table>

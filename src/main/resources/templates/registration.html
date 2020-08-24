@@ -4,8 +4,16 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Регистрация </title>
+    <style>
+        .center {
+            width: 200px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            background: #fc0; /* Цвет фона */
+        }
+    </style>
 </head>
-<body>
+<body class="center mt-5">
 <div th:if="${param.error}" class="alert alert-danger" role="alert">
     Неверный логин или пароль
 </div>

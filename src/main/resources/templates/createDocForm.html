@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Загрузка</title>
+    <style>
+        .center {
+            width: 200px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            background: #fc0; /* Цвет фона */
+        }
+    </style>
 </head>
-<body>
+<body class="center mt-5">
 <h1>Добавить результат студента: </h1>
 <div>
     <form th:action="@{/logout}" method="post">
@@ -14,10 +22,14 @@
 <form action="#" th:action="@{/create}" th:object="${document}" enctype="multipart/form-data" method="post">
     <table>
         <tr>
-            <td>Название документа:</td>
+            <td>Фамилия студента:</td>
             <td><input type="text" th:field="*{text}" /></td>
             <td th:if="${#fields.hasErrors('text')}" th:errors="*{text}" bgcolor="red">Text Error</td>
-            <td><input type="file" name="file"/></td>
+            <td>ВУЗ:</td>
+            <td><input type="text" th:field="*{VUZ}" /></td>
+            <td><div th:if="${isAdmin}"></div>Результат:</td>
+            <td><div th:if="${isAdmin}"><input type="text" th:field="*{finish}"></div></td>
+
         </tr>
         <tr>
             <td><button type="submit">Добавить</button></td>

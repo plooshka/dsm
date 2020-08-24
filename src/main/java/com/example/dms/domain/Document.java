@@ -4,13 +4,9 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Entity
-public class Document {
+public class Document implements Comparable<Document> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,26 +20,27 @@ public class Document {
     @JoinColumn(name = "user_id")
     private User author;
 
-    private Date createdAt;
+    private String VUZ;
 
-    private String filename;
+    private Double finish;
 
     public Document(){
     }
 
-    public Document(String text, User author) {
+    public Document(String text, User author, String VUZ, Double finish) {
         this.author = author;
         this.text = text;
-        this.createdAt = new Date();
+        this.VUZ = VUZ;
+        this.finish = finish;
     }
 
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setVUZ(String VUZ) {
+        this.VUZ = VUZ;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getVUZ() {
+        return VUZ;
     }
 
     public Long getId() {
@@ -70,11 +67,30 @@ public class Document {
         this.author = author;
     }
 
-    public String getFilename() {
-        return filename;
+    public Double getFinish() {
+        return finish;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFinish(Double finish) {
+        this.finish = finish;
     }
+
+    @Override
+    public int compareTo(Document obj)
+    {
+        Document tmp = (Document) obj;
+        if(this.finish < tmp.finish)
+        {
+            /* текущее меньше полученного */
+            return -1;
+        }
+        else if(this.finish > tmp.finish)
+        {
+            /* текущее больше полученного */
+            return 1;
+        }
+        /* текущее равно полученному */
+        return 0;
+    }
+
 }

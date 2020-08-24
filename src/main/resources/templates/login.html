@@ -4,9 +4,17 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Вход</title>
+    <style>
+        .center {
+            width: 200px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            background: #fc0; /* Цвет фона */
+        }
+    </style>
 </head>
-<body>
-<div>Авторизация</div>
+<body class="center mt-5" >
+<div><b>Авторизация</b></div>
 <div th:if="${param.error}" class="alert alert-danger" role="alert">
     <span>Неверный логин или пароль</span>
 </div>

@@ -3,10 +3,18 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Редактирование документа</title>
+    <title>Редактирование результата</title>
+    <style>
+        .center {
+            width: 200px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            background: #fc0; /* Цвет фона */
+        }
+    </style>
 </head>
-<body>
-<h1>Изменить документ: </h1>
+<body class="center mt-5">
+<h1>Изменить запись: </h1>
 <div>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
@@ -16,11 +24,14 @@
     <input type="hidden" th:value="${document.Id}" name="docId" />
     <table>
         <tr>
-            <td>Изменить название документа:</td>
+            <td>Новая фамилия:</td>
             <td><input type="text" th:field="*{text}" name="text" /></td>
             <!--<td th:if="${#fields.hasErrors('text')}" th:errors="*{text}" bgcolor="red">Text Error</td>-->
             <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert"><span></span></div>
-            <td><input type="file" name="file"/></td>
+            <td>Изменить ВУЗ:</td>
+            <td><input type="text" th:field="*{VUZ}" name="text" /></td>
+            <td>Новый результат:</td>
+            <td><input type="text" th:field="*{finish}" name="text" /></td>
         </tr>
         <tr>
             <td><button type="submit">Сохранить</button></td>
