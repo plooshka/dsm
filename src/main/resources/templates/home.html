@@ -11,15 +11,15 @@
 <h1>Привет, <span th:text="${user.username}"></span></h1>
 <div><b>Список документов</b></div>
 
-<div th:if="${isAdmin}"> <a th:href="@{/user}">Список пользователей</a></div>
+<div th:if="${isAdmin}"> <a th:href="@{/user}">Список результатов</a></div>
 
 <table border="1">
     <thead>
     <tr>
-        <th> Документ </th>
-        <th> Автор </th>
-        <th> Время загрузки </th>
-        <th> Файл Документа </th>
+        <th> Фамилия</th>
+        <th> Пользователь </th>
+        <th> ВУЗ </th>
+        <th> Результат </th>
         <th></th>
 
     </tr>
@@ -33,7 +33,7 @@
         <td><span th:text="${doc.author.username}"> Автор </span></td>
         <td><span th:text="${doc.createdAt}"> Время загрузки </span></td>
         <td><a th:href="@{/docs/{docName}(docName=${doc.filename})}" th:text="${doc.filename}" >  </a></td>
-        <td><a th:href="@{/documents/{id}(id=${doc.id})}"> редактировать документ</a></td>
+        <td><a th:href="@{/documents/{id}(id=${doc.id})}"> редактировать результат</a></td>
     </tr>
     </tbody>
 </table>
